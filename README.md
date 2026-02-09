@@ -1,191 +1,190 @@
-# 🚀# UniSocial — United Social Platforms
+# UniSocial — United Social Platforms
 
 Full-stack social media management tool (React + Node.js + PostgreSQL)
+
+> **Portfolio Project**: 소셜 미디어 통합 관리 도구의 풀스택 구현. 플랫폼 게시 기능은 Late API에 의존하며, 프로덕션 배포를 위해서는 각 플랫폼 공식 API 직접 연동이 필요합니다.
+
+## Tech Stack
+
+**Frontend**: React 18, Vite, Tailwind CSS, React Router, Context API, Framer Motion  
+**Backend**: Node.js, Express, PostgreSQL, JWT  
+**External**: Late API (platform integration), DeepL (translation), Claude AI (caption), PortOne (payment)
 
 ## Architecture
 
 ```
-┌──────────────┐     ┌──────────────────┐     ┌─────────────┐
-│  React PWA   │────→│  Express Backend  │────→│  Late API   │──→ 13 Platforms
-│  (Frontend)  │     │                  │     └─────────────┘
-└──────────────┘     │  PostgreSQL      │
-                     │  Claude AI       │──→ Caption/Translation
-                     │  PortOne         │──→ Payments (KR)
-                     └──────────────────┘
+┌──────────────────┐     ┌──────────────────┐
+│   React + Vite   │────→│  Express + PG    │
+│   Tailwind CSS   │     │                  │──→ Late API ──→ Social Platforms
+│   Context API    │     │  JWT Auth        │──→ DeepL ──→ Translation
+│   React Router   │     │  Usage Limits    │──→ Claude AI ──→ Captions
+└──────────────────┘     │                  │──→ PortOne ──→ Payments
+                         └──────────────────┘
 ```
 
-## Supported Platforms (13)
+## Features
 
-| Platform | Text | Image | Video | Scheduling | Notes |
-|----------|:----:|:-----:|:-----:|:----------:|-------|
-| Instagram | ✅ | ✅ | ✅ | ✅ | Reels, Stories, Carousel |
-| TikTok | ✅ | — | ✅ | ✅ | 1s~10min |
-| YouTube | ✅ | — | ✅ | ✅ | Requires title, Shorts auto-detect |
-| Twitter/X | ✅ | ✅ | ✅ | ✅ | 280 chars, Threads |
-| Facebook | ✅ | ✅ | ✅ | ✅ | Pages supported |
-| LinkedIn | ✅ | ✅ | ✅ | ✅ | Articles, Documents |
-| Threads | ✅ | ✅ | ✅ | ✅ | 500 chars |
-| Reddit | ✅ | ✅ | ✅ | ✅ | Requires title |
-| Pinterest | ✅ | ✅ | ✅ | ✅ | Requires link |
-| Bluesky | ✅ | ✅ | — | ✅ | 300 chars |
-| Telegram | ✅ | ✅ | ✅ | ✅ | Documents |
-| Snapchat | ✅ | ✅ | ✅ | ✅ | |
-| Google Business | ✅ | ✅ | — | ✅ | Updates, Offers, Events |
+### Authentication
+- Email signup + 6-digit verification code
+- Google / Microsoft / Apple OAuth
+- JWT session (Remember me)
+- Password reset via email
 
-## Languages (4)
+### Post Editor
+- Platform-specific field switching (title, caption, tags, subreddit, etc.)
+- Media upload (image/video) + preview with lightbox
+- Drag & drop file upload
+- Character count progress bar per platform
+- 3 scheduling modes: immediate / date / delay
 
-| Language | Code | API responses | AI captions | Translation |
-|----------|:----:|:------------:|:-----------:|:-----------:|
-| 한국어 | `ko` | ✅ | ✅ | ✅ |
-| English | `en` | ✅ | ✅ | ✅ |
-| 中文 | `zh` | ✅ | ✅ | ✅ |
-| 日本語 | `ja` | ✅ | ✅ | ✅ |
+### Multi-language
+- UI: 한국어, English, 中文, 日本語
+- API responses, error messages, emails all localized
+- DeepL translation (up to 20 target languages per post)
 
-Set language via: `?lang=en`, header `X-Language: en`, or user preference.
+### Subscription
+- 3 tiers: Free (₩0, 5/mo), Basic (₩3,900, 50/mo), Pro (₩9,900, unlimited)
+- PortOne payment integration (Korea)
+- Usage tracking + plan-based limits
 
-## Quick Start
+### Frontend
+- Custom design system (DM Sans / JetBrains Mono)
+- Mobile responsive (sidebar → overlay menu)
+- Dark mode support
+- Toast notification system
+- Framer Motion animations
 
-```bash
-cd backend
-npm install
-cp .env.example .env    # Fill in LATE_API_KEY + DATABASE_URL
-npm start               # → http://localhost:3001
+## Project Structure
+
 ```
+backend/
+├── server.js
+├── config/
+│   ├── database.js            # PostgreSQL schema
+│   └── i18n.js                # ko/en/zh/ja translations
+├── middleware/
+│   ├── auth.js                # JWT auth (header + query param)
+│   └── usageLimit.js          # Plan usage limits
+├── routes/
+│   ├── auth.js                # Signup, login, OAuth, password reset
+│   ├── posts.js               # Post, schedule, edit, delete
+│   ├── social.js              # Account sync, connect, disconnect
+│   ├── ai.js                  # AI caption, translation
+│   └── subscription.js        # Subscription management
+└── services/
+    ├── lateService.js         # Late API client
+    ├── aiService.js           # Claude AI client
+    ├── translateService.js    # DeepL translation
+    ├── emailService.js        # Email delivery
+    ├── oauthService.js        # Google/MS/Apple OAuth
+    └── paymentService.js      # PortOne payment
+
+frontend/
+├── src/
+│   ├── api/client.js          # API client (token, error handling)
+│   ├── context/
+│   │   ├── AuthContext.jsx    # Auth state
+│   │   ├── AccountsContext.jsx# Social accounts + auto sync
+│   │   ├── LangContext.jsx    # Language switching
+│   │   └── ToastContext.jsx   # Notifications
+│   ├── pages/
+│   │   ├── Dashboard.jsx      # Stats + recent posts + onboarding
+│   │   ├── Compose.jsx        # Post editor (per-platform fields)
+│   │   ├── History.jsx        # Post history
+│   │   ├── Accounts.jsx       # Connect / disconnect / reconnect
+│   │   ├── Login.jsx          # Login + OAuth
+│   │   ├── Signup.jsx         # Signup + email verification
+│   │   └── ForgotPassword.jsx
+│   └── data/platforms.js      # 13 platform definitions + field schema
+└── tailwind.config.js         # Custom theme
+```
+
+## Getting Started
 
 ### Prerequisites
+- Node.js 18+
+- PostgreSQL
 
-| Required | URL | Notes |
-|----------|-----|-------|
-| Node.js 18+ | nodejs.org | |
-| PostgreSQL | | `createdb social_hub` |
-| Late account | https://getlate.dev | Free: 10 posts/month |
+### Install
 
-| Optional | URL | Notes |
-|----------|-----|-------|
-| Anthropic API | https://console.anthropic.com | AI captions (default fallback works without) |
-| PortOne | https://admin.portone.io | Payments (needs Korean business registration) |
+```bash
+# Backend
+cd backend
+npm install
+cp .env.example .env    # Set API keys
+npm start               # → http://localhost:3001
+
+# Frontend
+cd frontend
+npm install
+npm run dev             # → http://localhost:5173
+```
+
+### Environment Variables (.env)
+
+```
+DATABASE_URL=postgresql://user:pass@localhost:5432/social_hub
+JWT_SECRET=your-secret
+LATE_API_KEY=your-late-api-key
+FRONTEND_URL=http://localhost:5173
+
+# Optional
+DEEPL_API_KEY=your-deepl-key
+ANTHROPIC_API_KEY=your-anthropic-key
+```
 
 ## API Endpoints
 
 ### Auth
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | `/api/auth/signup` | Register (with language pref) |
+| POST | `/api/auth/register` | Signup (email verification) |
+| POST | `/api/auth/verify` | Verify code |
 | POST | `/api/auth/login` | Login |
-| GET | `/api/auth/me` | My info |
-| PATCH | `/api/auth/language` | Update language |
+| POST | `/api/auth/forgot-password` | Password reset request |
+| POST | `/api/auth/reset-password` | Password reset |
 
-### Posts (Cross-posting)
+### Posts
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | `/api/posts` | **Cross-post to multiple platforms** |
+| POST | `/api/posts` | Create post |
 | GET | `/api/posts` | Post history |
-| DELETE | `/api/posts/:id` | Delete post |
+| PUT | `/api/posts/:id` | Edit scheduled post |
+| DELETE | `/api/posts/:id` | Delete |
 
 ### Social Accounts
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/social/accounts` | Connected accounts |
 | POST | `/api/social/sync` | Sync from Late |
-| GET | `/api/social/connect/:platform` | Get OAuth URL |
-| GET | `/api/social/profiles` | Late profiles |
-| GET | `/api/social/platforms` | Platform features |
+| GET | `/api/social/connect/:platform` | Platform OAuth |
 | DELETE | `/api/social/accounts/:id` | Disconnect |
+| POST | `/api/social/accounts/:id/reconnect` | Reconnect |
 
-### AI (Claude)
+### AI / Translation
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | `/api/ai/suggest` | Caption + hashtags (multilingual) |
-| POST | `/api/ai/ideas` | Content ideas (multilingual) |
-| POST | `/api/ai/translate` | **Translate content across languages** |
+| POST | `/api/ai/suggest` | AI caption + hashtags |
+| POST | `/api/ai/ideas` | Content ideas |
+| POST | `/api/ai/translate` | Translate (up to 20 languages) |
 
-### Subscription (PortOne)
+### Subscription
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/subscription/plans` | Plan list |
 | GET | `/api/subscription/me` | My subscription |
-| GET | `/api/subscription/usage` | Usage stats |
-| POST | `/api/subscription/subscribe` | Start subscription |
+| POST | `/api/subscription/subscribe` | Subscribe |
 | POST | `/api/subscription/cancel` | Cancel |
 
-## Cross-posting Example
+## Limitations
 
-```bash
-curl -X POST http://localhost:3001/api/posts \
-  -H "Authorization: Bearer YOUR_JWT" \
-  -H "Content-Type: application/json" \
-  -H "X-Language: ko" \
-  -d '{
-    "content": "새로운 영상 올렸습니다! 🎬",
-    "platforms": ["youtube", "instagram", "twitter", "threads"],
-    "platformSpecific": {
-      "youtube": { "title": "새 영상 타이틀", "visibility": "public" },
-      "reddit": { "title": "Check out my new video" }
-    },
-    "mediaItems": [{"type": "video", "url": "https://...mp4"}]
-  }'
-```
+- **Late API dependency**: Platform posting relies on Late API. Direct platform API integration (X API, Meta Graph API, etc.) is needed for production.
+- **Payment testing**: PortOne integration requires Korean business registration for live testing.
+- **Media hosting**: Uses catbox.moe for public URL conversion. Production would need S3 or CloudFlare R2.
 
-## Translation Example
+## License
 
-```bash
-curl -X POST http://localhost:3001/api/ai/translate \
-  -H "Authorization: Bearer YOUR_JWT" \
-  -d '{
-    "content": "오늘 새로운 영상을 올렸어요! 많이 봐주세요 🎬",
-    "fromLang": "ko",
-    "toLangs": ["en", "zh", "ja"]
-  }'
-
-# Response:
-# {
-#   "translations": {
-#     "en": "I uploaded a new video today! Please check it out 🎬",
-#     "zh": "今天上传了新视频！请多多观看 🎬",
-#     "ja": "今日新しい動画をアップしました！ぜひご覧ください 🎬"
-#   }
-# }
-```
-
-## Project Structure
-
-```
-backend/
-├── server.js                     # Express + i18n middleware
-├── package.json
-├── .env.example
-├── config/
-│   ├── database.js               # PostgreSQL schema (no band)
-│   └── i18n.js                   # 🆕 ko/en/zh/ja translations
-├── middleware/
-│   ├── auth.js                   # JWT auth
-│   └── usageLimit.js             # Plan usage limits
-├── services/
-│   ├── lateService.js            # 🔄 Late API (13 platforms)
-│   ├── aiService.js              # 🔄 Claude AI (multilingual + translate)
-│   └── paymentService.js         # PortOne payments
-└── routes/
-    ├── auth.js                   # 🔄 Auth + language preference
-    ├── posts.js                  # 🔄 Cross-posting (Late only)
-    ├── social.js                 # 🔄 Account management (Late only)
-    ├── ai.js                     # 🔄 AI + translation endpoint
-    └── subscription.js           # Subscription management
-```
-
-## Subscription Plans
-
-| | Free | Basic ₩3,900/mo | Pro ₩9,900/mo |
-|--|:--:|:--:|:--:|
-| Cross-posting | 5/mo | 50/mo | Unlimited |
-| AI Captions | 3/mo | 30/mo | Unlimited |
-| Platforms | All 13 | All 13 | All 13 |
-| Scheduling | ❌ | ✅ | ✅ |
-| Translation | ❌ | ✅ | ✅ |
-| History | 7 days | 30 days | Unlimited |
-
-## Cost
-
-| Item | MVP (Free) | Production |
+MIT
 |------|:----------:|:----------:|
 | Late API | $0 (10/mo) | $13+ |
 | Render | $0 | $14 |
