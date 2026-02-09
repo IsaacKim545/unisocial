@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { -webkit-tap-highlight-color: transparent; }
+  body { @apply font-body text-surface-800 dark:text-surface-100; }
+  ::selection { @apply bg-brand-200/40; }
+  input, textarea, select {
+    @apply font-body;
+  }
+}
+
+@layer components {
+  /* ── Buttons ── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5
+      bg-brand-500 hover:bg-brand-600 active:bg-brand-700
+      text-white font-semibold text-sm rounded-xl
+      shadow-sm hover:shadow-glow
+      transition-all duration-200 ease-out
+      disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5
+      bg-surface-100 hover:bg-surface-200 dark:bg-surface-800 dark:hover:bg-surface-700
+      text-surface-700 dark:text-surface-200 font-medium text-sm rounded-xl
+      border border-surface-200 dark:border-surface-700
+      transition-all duration-200 ease-out
+      disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2
+      text-danger hover:bg-danger-light dark:hover:bg-danger/10
+      font-medium text-sm rounded-xl
+      transition-all duration-200 ease-out;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2
+      text-surface-500 hover:text-surface-700 hover:bg-surface-100
+      dark:hover:text-surface-200 dark:hover:bg-surface-800
+      font-medium text-sm rounded-xl
+      transition-all duration-200 ease-out;
+  }
+
+  /* ── Inputs ── */
+  .input {
+    @apply w-full px-4 py-2.5 text-sm rounded-xl
+      bg-white dark:bg-surface-900
+      border border-surface-200 dark:border-surface-700
+      text-surface-800 dark:text-surface-100
+      placeholder:text-surface-400 dark:placeholder:text-surface-500
+      focus:outline-none focus:ring-2 focus:ring-brand-400/40 focus:border-brand-400
+      transition-all duration-200;
+  }
+  .input-error {
+    @apply border-danger focus:ring-danger/40 focus:border-danger;
+  }
+
+  /* ── Cards ── */
+  .card {
+    @apply bg-white dark:bg-surface-900 rounded-2xl
+      border border-surface-100 dark:border-surface-800
+      shadow-card;
+  }
+
+  /* ── Toast ── */
+  .toast {
+    @apply fixed bottom-6 left-1/2 -translate-x-1/2 z-50
+      px-5 py-3 rounded-xl shadow-card
+      text-sm font-medium
+      animate-slide-up;
+  }
+
+  /* ── Scrollbar ── */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: theme("colors.surface.300") transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar { width: 5px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: theme("colors.surface.300"); border-radius: 99px; }
+
+  /* ── Spinner ── */
+  .spinner {
+    @apply inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin;
+  }
+}
