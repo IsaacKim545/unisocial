@@ -1,6 +1,6 @@
 # 🚀# UniSocial — United Social Platforms
 
-A social media management tool that allows you to manage 13 social media platforms in one place. It supports 한국어·English·中文·日本語.
+Full-stack social media management tool (React + Node.js + PostgreSQL)
 
 ## Architecture
 
