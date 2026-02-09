@@ -1,7 +1,6 @@
 # 🚀# UniSocial — United Social Platforms
 
-A social media management tool that allows you to manage 13 social media platforms in one place. Supports Korean, English, Chinese, and Japanese.
-13개 소셜미디어 플랫폼을 통합 관리할 수 있는 소셜 미디어 관리 도구. 한국어·English·中文·日本語 지원.
+A social media management tool that allows you to manage 13 social media platforms in one place. It Supports 한국어·English·中文·日本語.
 
 ## Architecture
 
