@@ -185,7 +185,6 @@ ANTHROPIC_API_KEY=your-anthropic-key
 ## License
 
 MIT
-|------|:----------:|:----------:|
 | Late API | $0 (10/mo) | $13+ |
 | Render | $0 | $14 |
 | Claude AI | $0 (fallback) | ~$5 |
