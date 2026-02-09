@@ -181,7 +181,3 @@ ANTHROPIC_API_KEY=your-anthropic-key
 - **Late API dependency**: Platform posting relies on Late API. Direct platform API integration (X API, Meta Graph API, etc.) is needed for production.
 - **Payment testing**: PortOne integration requires Korean business registration for live testing.
 - **Media hosting**: Uses catbox.moe for public URL conversion. Production would need S3 or CloudFlare R2.
-
-## License
-
-MIT
