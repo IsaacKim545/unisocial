@@ -1,6 +1,7 @@
-# 🚀 UniSocial — Cross-posting SaaS for 13 Platforms
+# 🚀# UniSocial — United Social Platforms
 
-하나의 API로 13개 소셜미디어에 동시 게시. 한국어·English·中文·日本語 지원.
+A social media management tool that allows you to manage 13 social media platforms in one place. Supports Korean, English, Chinese, and Japanese.
+13개 소셜미디어 플랫폼을 통합 관리할 수 있는 소셜 미디어 관리 도구. 한국어·English·中文·日本語 지원.
 
 ## Architecture
 
