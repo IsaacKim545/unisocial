@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniSocial</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08080d;--s1:#101018;--s2:#181822;--s3:#20202e;--bd:#282838;--tx:#e4e4f0;--tx2:#7878a0;--ac:#7c6aef;--ac2:#9d8df8;--ok:#2dd4a0;--warn:#f5a623;--err:#f05a5a;--g1:linear-gradient(135deg,#7c6aef,#b06af0,#e06af0);--r:14px;--f:'DM Sans','Noto Sans KR',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--f);background:var(--bg);color:var(--tx);height:100vh;overflow:hidden}
+
+/* AUTH */
+.ao{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:100}
+.ab{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:36px;width:400px;max-width:92vw}
+.ab h1{font-size:28px;font-weight:800;background:var(--g1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.ab .tag{color:var(--tx2);font-size:13px;margin-bottom:12px}
+.ab label{display:block;font-size:12px;color:var(--tx2);margin-bottom:5px;font-weight:500}
+.ab input[type=email],.ab input[type=password],.ab input[type=text]{width:100%;padding:10px 14px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:14px;font-family:var(--f);outline:none;margin-bottom:14px}
+.ab input:focus{border-color:var(--ac)}
+.abtn{width:100%;padding:12px;border:none;border-radius:10px;background:var(--g1);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--f);margin-top:6px}
+.abtn:hover{opacity:.9}.abtn:disabled{opacity:.5;cursor:not-allowed}
+.atog{text-align:center;margin-top:16px;font-size:13px;color:var(--tx2)}
+.atog a{color:var(--ac2);cursor:pointer}
+.aerr{color:var(--err);font-size:12px;margin-bottom:10px;min-height:16px}
+.cb{display:flex;align-items:center;gap:8px;margin:10px 0 6px;cursor:pointer;font-size:13px;color:var(--tx2)}
+.cb input{accent-color:var(--ac);width:16px;height:16px;cursor:pointer}
+.auth-lang{display:flex;gap:4px;justify-content:center;margin-bottom:18px}
+.alb{padding:5px 12px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--tx2);cursor:pointer;font-size:12px;font-family:var(--f);transition:all .15s}
+.alb:hover{border-color:var(--ac);color:var(--tx)}
+.alb.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.odiv{display:flex;align-items:center;gap:12px;margin:18px 0 14px;color:var(--tx2);font-size:12px}
+.odiv::before,.odiv::after{content:'';flex:1;height:1px;background:var(--bd)}
+.oauth{display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+.obtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:11px;border-radius:10px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:14px;font-weight:500;font-family:var(--f);transition:all .15s}
+.obtn:hover{border-color:var(--tx2);background:var(--s3)}
+.obtn img,.obtn svg{width:18px;height:18px}
+.obtn.g{background:#fff;color:#333;border-color:#ddd}.obtn.g:hover{background:#f5f5f5}
+.obtn.m{background:#2f2f2f;color:#fff;border-color:#444}.obtn.m:hover{background:#3a3a3a}
+.obtn.a{background:#000;color:#fff;border-color:#333}.obtn.a:hover{background:#1a1a1a}
+
+/* VERIFY */
+.vcode{display:flex;gap:8px;justify-content:center;margin:20px 0}
+.vcode input{width:44px;height:52px;text-align:center;font-size:22px;font-weight:700;background:var(--s2);border:1px solid var(--bd);border-radius:10px;color:var(--tx);font-family:var(--f);outline:none}
+.vcode input:focus{border-color:var(--ac)}
+.vinfo{text-align:center;font-size:13px;color:var(--tx2);margin-bottom:16px}
+.vresend{text-align:center;margin-top:14px}
+.vresend a{color:var(--ac2);cursor:pointer;font-size:13px}
+
+/* LAYOUT */
+.app{display:flex;height:100vh;display:none}
+.side{width:220px;background:var(--s1);border-right:1px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0}
+.side-hdr{padding:18px 16px 14px;border-bottom:1px solid var(--bd)}
+.side-hdr h1{font-size:20px;font-weight:800;background:var(--g1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.side-hdr p{font-size:10px;color:var(--tx2);letter-spacing:.8px;margin-top:3px}
+.snav{flex:1;padding:10px 8px}
+.sni{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;color:var(--tx2);font-size:14px;font-weight:500;transition:all .15s;margin-bottom:2px}
+.sni:hover{background:var(--s2);color:var(--tx)}.sni.on{background:rgba(124,106,239,.14);color:var(--ac2)}
+.sni .ico{font-size:17px;width:22px;text-align:center}
+.sfoot{padding:10px 8px;border-top:1px solid var(--bd)}
+.sfoot .lang{display:flex;gap:3px;justify-content:center;margin-bottom:8px}
+.lbtn{padding:4px 9px;border-radius:6px;border:1px solid var(--bd);background:transparent;color:var(--tx2);cursor:pointer;font-size:11px;font-family:var(--f)}
+.lbtn:hover{border-color:var(--ac);color:var(--tx)}.lbtn.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.lout{width:100%;padding:7px;border:1px solid var(--bd);border-radius:8px;background:transparent;color:var(--tx2);cursor:pointer;font-size:12px;font-family:var(--f)}
+.lout:hover{border-color:var(--err);color:var(--err)}
+
+/* MAIN */
+.mn{flex:1;overflow-y:auto;padding:28px 32px}
+.mn::-webkit-scrollbar{width:5px}.mn::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+.pg{display:none}.pg.on{display:block}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px}
+.stc{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:18px 20px;position:relative;overflow:hidden}
+.stc::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.stc:nth-child(1)::after{background:var(--g1)}.stc:nth-child(2)::after{background:linear-gradient(90deg,#2dd4a0,#10b981)}
+.stc:nth-child(3)::after{background:linear-gradient(135deg,#06b6d4,#3b82f6,#7c6aef)}.stc:nth-child(4)::after{background:linear-gradient(90deg,#f5a623,#f05a5a)}
+.stc-l{font-size:11px;color:var(--tx2);font-weight:600;text-transform:uppercase;letter-spacing:1.2px}
+.stc-v{font-size:30px;font-weight:800;margin-top:4px}
+
+/* COMPOSE */
+.cmp{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:22px}
+.cmp h2{font-size:17px;font-weight:700;margin-bottom:14px}
+
+/* PLATFORMS */
+.psec{margin-top:18px}
+.psec h3{font-size:11px;color:var(--tx2);margin-bottom:9px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px}
+.pgr{display:flex;flex-wrap:wrap;gap:7px}
+.pc{display:flex;align-items:center;gap:5px;padding:8px 15px;border-radius:18px;border:1.5px solid var(--bd);background:transparent;color:var(--tx2);cursor:pointer;font-size:12px;font-family:var(--f);font-weight:500;transition:all .15s}
+.pc:hover{border-color:var(--tx2);color:var(--tx)}.pc.on{border-color:var(--ac);background:rgba(124,106,239,.1);color:var(--ac2)}
+.pc.dis{opacity:.35;cursor:not-allowed}
+.pc .ptype-tag{font-size:9px;padding:1px 5px;border-radius:4px;margin-left:2px;font-weight:600}
+.pc .ptype-tag.media{background:rgba(240,90,90,.12);color:#f06a6a}
+.pc .ptype-tag.text{background:rgba(45,212,160,.12);color:var(--ok)}
+.pc .ptype-tag.both{background:rgba(124,106,239,.12);color:var(--ac2)}
+.lnote{font-size:11px;color:var(--tx2);margin-top:8px;min-height:16px}
+
+/* PLATFORM EDITOR */
+.nosel{text-align:center;padding:30px 0;color:var(--tx2);font-size:13px}
+.plat-header{display:flex;align-items:center;gap:10px;margin:18px 0 16px;padding-bottom:12px;border-bottom:1px solid var(--bd)}
+.plat-header .ph-ico{font-size:28px}
+.plat-header .ph-name{font-size:16px;font-weight:700}
+.plat-header .ph-type{font-size:10px;padding:3px 8px;border-radius:6px;font-weight:600}
+
+/* FIELD STYLES */
+.pf{margin-bottom:14px}
+.pf-label{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--tx2);margin-bottom:5px;font-weight:500}
+.pf-label .req{color:var(--err);font-size:10px}
+.pf-input{width:100%;padding:10px 14px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:14px;font-family:var(--f);outline:none}
+.pf-input:focus{border-color:var(--ac)}.pf-input::placeholder{color:var(--tx2)}
+.pf-ta{width:100%;min-height:80px;background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px;color:var(--tx);font-size:13px;resize:vertical;font-family:var(--f);outline:none;line-height:1.6}
+.pf-ta:focus{border-color:var(--ac)}.pf-ta::placeholder{color:var(--tx2)}
+.pf-cc{font-size:11px;color:var(--tx2);text-align:right;margin-top:3px}.pf-cc.over{color:var(--err)}
+.pf-fz{border:2px dashed var(--bd);border-radius:8px;padding:14px;text-align:center;cursor:pointer;color:var(--tx2);font-size:12px;transition:all .15s}
+.pf-fz:hover{border-color:var(--ac);color:var(--tx)}
+.pf-fz.has{border-style:solid;border-color:var(--ok);color:var(--ok)}
+.pf-hint{font-size:10px;color:var(--tx2);margin-top:4px;font-style:italic}
+.pf-prev{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.pf-prev-item{position:relative;width:64px;height:64px;border-radius:6px;overflow:hidden;border:1px solid var(--bd)}
+.pf-prev-item img,.pf-prev-item video{width:100%;height:100%;object-fit:cover}
+.pf-prev-item .fx{position:absolute;top:1px;right:1px;width:18px;height:18px;background:rgba(0,0,0,.7);border:none;border-radius:50%;color:#fff;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center}
+
+/* ACTIONS */
+.sched-opts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.sopt{display:flex;align-items:center;gap:5px;padding:7px 12px;border:1px solid var(--bd);border-radius:8px;cursor:pointer;font-size:12px;transition:all .15s;background:var(--s1)}
+.sopt:hover{border-color:var(--ac)}
+.sopt.on{border-color:var(--ac);background:rgba(124,106,239,.08)}
+.sopt input{display:none}
+.acts{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.btn{padding:9px 18px;border-radius:10px;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:var(--f);transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{transform:translateY(-1px)}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.bp{background:var(--g1);color:#fff}.bs{background:var(--s2);color:var(--tx2);border:1px solid var(--bd)}
+
+/* HISTORY */
+.hl{display:flex;flex-direction:column;gap:10px}
+.hi{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:16px;display:flex;gap:14px;align-items:flex-start}
+.hc{flex:1}.htx{font-size:13px;line-height:1.5;margin-bottom:8px}
+.hpl{display:flex;gap:4px;flex-wrap:wrap}
+.hpt{font-size:10px;padding:3px 7px;border-radius:10px;background:var(--s2);color:var(--tx2)}
+.hm{display:flex;flex-direction:column;align-items:flex-end;gap:5px;min-width:90px}
+.hdel,.hedit{background:none;border:1px solid var(--bd);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:12px;color:var(--tx2);transition:all .15s}
+.hdel:hover{border-color:var(--err);color:var(--err);background:rgba(240,90,90,.08)}.hedit:hover{border-color:var(--ac);color:var(--ac);background:rgba(124,106,239,.08)}
+.hs{font-size:10px;padding:3px 9px;border-radius:10px;font-weight:600;text-transform:uppercase}
+.sp{background:rgba(45,212,160,.14);color:var(--ok)}.sf{background:rgba(240,90,90,.14);color:var(--err)}
+.ss{background:rgba(124,106,239,.14);color:var(--ac2)}
+.hd{font-size:10px;color:var(--tx2)}
+
+/* ACCOUNTS */
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px}
+.ac{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:16px;text-align:center;position:relative;overflow:hidden}
+.ac .bar{position:absolute;top:0;left:0;right:0;height:3px}
+.aico{font-size:26px;margin-bottom:6px}.anm{font-size:12px;font-weight:600}
+.aus{font-size:11px;color:var(--tx2)}.ast{margin-top:6px;font-size:10px;color:var(--ok)}
+
+.toast{position:fixed;bottom:20px;right:20px;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;box-shadow:0 6px 24px rgba(0,0,0,.35);font-family:var(--f);transform:translateY(80px);opacity:0;transition:all .3s}
+.toast.show{transform:translateY(0);opacity:1}.tok{background:var(--ok);color:#fff}.ter{background:var(--err);color:#fff}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:40px;color:var(--tx2);font-size:14px}
+@media(max-width:768px){.side{width:56px}.side-hdr p,.sni span:not(.ico),.sfoot .lang{display:none}.stats{grid-template-columns:repeat(2,1fr)}.mn{padding:16px 12px}}
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div class="ao" id="authScr">
+<div class="ab">
+  <h1>⚡ UniSocial</h1>
+  <p class="tag" id="authTag">13 Platforms, One Dashboard</p>
+  <div class="auth-lang" id="authLang"></div>
+  <div class="aerr" id="aerr"></div>
+
+  <!-- LOGIN -->
+  <div id="fLogin">
+    <div class="oauth" id="oauthBtns"></div>
+    <div class="odiv" id="odiv"><span id="odivText">또는</span></div>
+    <label id="lbEmail">Email</label>
+    <input type="email" id="lEmail" placeholder="test@test.com">
+    <label id="lbPass">Password</label>
+    <input type="password" id="lPass" placeholder="••••">
+    <label class="cb"><input type="checkbox" id="rememberMe"> <span id="lbRemember">로그인 유지</span></label>
+    <button class="abtn" id="loginBtn" onclick="doLogin()">로그인</button>
+    <div class="atog"><a onclick="showForm('forgot')" id="lbForgot">비밀번호를 잊으셨나요?</a></div>
+    <div class="atog"><a onclick="showForm('signup')" id="lbToSignup">회원가입</a></div>
+  </div>
+
+  <!-- SIGNUP -->
+  <div id="fSignup" style="display:none">
+    <label id="lbSEmail">Email</label>
+    <input type="email" id="sEmail">
+    <label id="lbSUser">Username</label>
+    <input type="text" id="sUser">
+    <label id="lbSPass">Password</label>
+    <input type="password" id="sPass">
+    <button class="abtn" id="signupBtn" onclick="doSignup()">회원가입</button>
+    <div class="atog"><a onclick="showForm('login')" id="lbToLogin">로그인으로 돌아가기</a></div>
+  </div>
+
+  <!-- VERIFY -->
+  <div id="fVerify" style="display:none">
+    <div class="vinfo" id="vinfo">이메일로 발송된 6자리 코드를 입력하세요.</div>
+    <div class="vcode" id="vcodeBox"></div>
+    <button class="abtn" id="verifyBtn" onclick="doVerify()">인증 확인</button>
+    <div class="vresend"><a onclick="doResend()" id="lbResend">코드 재발송</a></div>
+    <div class="atog" style="margin-top:10px"><a onclick="showForm('signup')" id="lbVerifyBack">뒤로</a></div>
+  </div>
+
+  <!-- FORGOT PASSWORD -->
+  <div id="fForgot" style="display:none">
+    <div class="vinfo" id="forgotInfo">가입한 이메일을 입력하세요.</div>
+    <label id="lbFEmail">Email</label>
+    <input type="email" id="fgEmail">
+    <button class="abtn" id="forgotBtn" onclick="doForgotSend()">인증 코드 발송</button>
+    <div class="atog"><a onclick="showForm('login')" id="lbForgotBack">로그인으로 돌아가기</a></div>
+  </div>
+
+  <!-- RESET PASSWORD -->
+  <div id="fReset" style="display:none">
+    <div class="vinfo" id="resetInfo">이메일로 발송된 6자리 코드와 새 비밀번호를 입력하세요.</div>
+    <label id="lbRCode">인증 코드</label>
+    <input type="text" id="rsCode" maxlength="6" placeholder="123456">
+    <label id="lbRPass">새 비밀번호</label>
+    <input type="password" id="rsPass" placeholder="••••">
+    <button class="abtn" id="resetBtn" onclick="doResetPw()">비밀번호 변경</button>
+    <div class="atog"><a onclick="showForm('forgot')" id="lbResetBack">뒤로</a></div>
+  </div>
+</div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <div class="side">
+    <div class="side-hdr"><h1>⚡ UniSocial</h1><p id="stag"></p></div>
+    <nav class="snav" id="snav"></nav>
+    <div class="sfoot">
+      <div class="lang" id="lbtns"></div>
+      <button class="lout" id="loutBtn" onclick="doLogout()">로그아웃</button>
+    </div>
+  </div>
+  <div class="mn">
+    <div class="pg" id="pDash">
+      <div class="stats" id="stGrid"></div>
+      <h2 style="font-size:16px;font-weight:700;margin-bottom:14px" id="rtitle"></h2>
+      <div class="hl" id="rPosts"></div>
+    </div>
+    <div class="pg" id="pComp">
+      <div class="cmp">
+        <h2 id="ctitle">✏️ 새 게시물</h2>
+        <!-- Platform Selection (single) -->
+        <div class="psec" style="margin-top:0">
+          <h3 id="plab"></h3>
+          <div class="pgr" id="pgrid"></div>
+        </div>
+        <!-- Platform Editor -->
+        <div id="platEditor">
+          <div class="nosel" id="noSelMsg"></div>
+          <div id="platFields"></div>
+        </div>
+        <!-- Language + Publish -->
+        <div class="psec" id="secLang" style="display:none">
+          <h3 id="llabel"></h3>
+          <div class="pgr" id="lgrid"></div>
+          <p class="lnote" id="lnote"></p>
+        </div>
+        <div class="psec" id="secSched" style="display:none">
+          <h3 id="schedLabel"></h3>
+          <div class="sched-opts">
+            <label class="sopt on" id="soptNow"><input type="radio" name="schedMode" value="now" checked onchange="toggleSched()"><span id="soptNowL">🚀 지금 게시</span></label>
+            <label class="sopt" id="soptDate"><input type="radio" name="schedMode" value="date" onchange="toggleSched()"><span id="soptDateL">📅 날짜/시간 지정</span></label>
+            <label class="sopt" id="soptDelay"><input type="radio" name="schedMode" value="delay" onchange="toggleSched()"><span id="soptDelayL">⏰ N시간 후</span></label>
+          </div>
+          <div id="schedDateWrap" style="display:none;margin-top:10px">
+            <input type="datetime-local" id="schedDateTime" class="pf-input" style="width:100%">
+          </div>
+          <div id="schedDelayWrap" style="display:none;margin-top:10px;align-items:center;gap:8px">
+            <input type="number" id="schedDelayH" class="pf-input" min="1" max="720" value="1" style="width:80px">
+            <span id="schedDelayUnit" style="font-size:13px;color:var(--tx2)">시간 후</span>
+          </div>
+        </div>
+        <div class="acts" id="secPub" style="display:none">
+          <button class="btn bp" id="pubBtn" onclick="doPublish()">🚀 게시하기</button>
+        </div>
+        <div id="transStatus" style="margin-top:14px;font-size:13px;display:none"></div>
+      </div>
+    </div>
+    <div class="pg" id="pHist">
+      <h2 style="font-size:20px;font-weight:700;margin-bottom:18px" id="htitle"></h2>
+      <div class="hl" id="hList"></div>
+    </div>
+    <div class="pg" id="pAcct">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+        <h2 style="font-size:20px;font-weight:700" id="atitle"></h2>
+        <button class="btn bs" onclick="doSync()">🔄 <span id="slab"></span></button>
+      </div>
+      <div class="ag" id="agrid"></div>
+      <p class="empty" id="noAcc" style="display:none"></p>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const API="http://localhost:3001/api";
+let token="",user=null,lang="ko",curPage="dashboard",accounts=[],selPlat="",selLangs=["ko"],pendingUser=null,curPlatData={_files:{}},editingPostId=null;
+
+const PL=[
+  // type: "media" = 미디어 필수, "text" = 텍스트 중심, "both" = 둘 다 가능
+  {id:"instagram",i:"📸",n:"Instagram",c:"#E4405F",m:2200,type:"media"},
+  {id:"tiktok",i:"🎵",n:"TikTok",c:"#010101",m:2200,type:"media"},
+  {id:"youtube",i:"▶️",n:"YouTube",c:"#FF0000",m:5000,type:"media"},
+  {id:"pinterest",i:"📌",n:"Pinterest",c:"#E60023",m:500,type:"media"},
+  {id:"snapchat",i:"👻",n:"Snapchat",c:"#FFFC00",m:250,type:"media"},
+  {id:"twitter",i:"𝕏",n:"X",c:"#1DA1F2",m:280,type:"text"},
+  {id:"threads",i:"🧵",n:"Threads",c:"#000",m:500,type:"text"},
+  {id:"bluesky",i:"🦋",n:"Bluesky",c:"#0085FF",m:300,type:"text"},
+  {id:"facebook",i:"📘",n:"Facebook",c:"#1877F2",m:63206,type:"both"},
+  {id:"linkedin",i:"💼",n:"LinkedIn",c:"#0A66C2",m:3000,type:"both"},
+  {id:"reddit",i:"🤖",n:"Reddit",c:"#FF4500",m:40000,type:"both"},
+  {id:"telegram",i:"✈️",n:"Telegram",c:"#26A5E4",m:4096,type:"both"},
+  {id:"googlebusiness",i:"🏢",n:"Google Biz",c:"#4285F4",m:1500,type:"both"},
+];
+
+const L={
+  ko:{tag:"13개 플랫폼, 하나의 화면",dash:"대시보드",comp:"새 게시물",hist:"게시 기록",acct:"계정 관리",
+    tot:"총 게시물",sch:"예약됨",conn:"연결됨",mon:"이번 달",write:"내용을 작성하세요...",pub:"게시하기",
+    selp:"플랫폼 선택",rec:"최근 게시물",noAcc:"연결된 계정이 없습니다.",sync:"동기화",out:"로그아웃",
+    login:"로그인",signup:"회원가입",back:"로그인으로 돌아가기",pubd:"게시됨",fail:"실패",pubing:"게시 중...",
+    nop:"게시물이 없습니다.",selAt:"플랫폼을 선택하세요.",enterC:"내용을 입력하세요.",del:"삭제",delConfirm:"이 게시물을 삭제하시겠습니까?",deleted:"삭제됨",
+    syncd:"동기화 완료!",remember:"로그인 유지",
+    vinfo:"이메일로 발송된 6자리 코드를 입력하세요.",verify:"인증 확인",resend:"코드 재발송",
+    file:"📎 파일 첨부 (이미지/영상) — 클릭 또는 드래그",uploading:"업로드 중...",
+    email:"이메일",password:"비밀번호",username:"사용자 이름",verifyBack:"뒤로",fillAll:"모든 항목을 입력하세요.",code6:"6자리 코드를 입력하세요.",codeSent:"코드 재발송 완료!",
+    forgot:"비밀번호를 잊으셨나요?",forgotInfo:"가입한 이메일을 입력하세요. 인증 코드를 발송합니다.",sendCode:"인증 코드 발송",resetInfo:"이메일로 발송된 6자리 코드와 새 비밀번호를 입력하세요.",resetCode:"인증 코드",newPw:"새 비밀번호",changePw:"비밀번호 변경",resetSent:"인증 코드가 발송되었습니다.",
+    distLang:"배포 언어",distNote1:"원문 그대로 게시됩니다.",distNoteN:"DeepL이 자동 번역하여 {n}개 언어로 각각 게시합니다.",translating:"번역 중...",transOk:"번역 완료! 게시 중...",transFail:"번역 실패 — 원문으로 게시합니다.",noApiKey:"DeepL 번역을 사용하려면 DEEPL_API_KEY가 필요합니다. 원문으로 게시합니다.",pubMulti:"게시됨 — {n}개 언어",
+    schedTitle:"게시 시간",schedNow:"🚀 지금 게시",schedDate:"📅 날짜/시간 지정",schedDelay:"⏰ N시간 후",schedHourUnit:"시간 후",schedOk:"예약 완료!",mediaUploading:"📎 미디어 업로드 중...",
+    edit:"수정",editSave:"수정 완료",editMode:"예약 게시물 수정 모드",editDone:"수정 완료!",editOnly:"예약된 게시물만 수정 가능합니다.",
+    or:"또는",gLogin:"Google로 계속",mLogin:"Microsoft로 계속",aLogin:"Apple로 계속"},
+  en:{tag:"13 Platforms, One Dashboard",dash:"Dashboard",comp:"New Post",hist:"History",acct:"Accounts",
+    tot:"Total Posts",sch:"Scheduled",conn:"Connected",mon:"This Month",write:"Write your content...",pub:"Publish",
+    selp:"Select Platforms",rec:"Recent Posts",noAcc:"No connected accounts.",sync:"Sync",out:"Logout",
+    login:"Login",signup:"Sign Up",back:"Back to Login",pubd:"Published",fail:"Failed",pubing:"Publishing...",
+    nop:"No posts yet.",selAt:"Select a platform.",enterC:"Enter some content.",del:"Delete",delConfirm:"Delete this post?",deleted:"Deleted",
+    syncd:"Synced!",remember:"Remember me",
+    vinfo:"Enter the 6-digit code sent to your email.",verify:"Verify",resend:"Resend code",
+    file:"📎 Attach files (image/video) — click or drag",uploading:"Uploading...",
+    email:"Email",password:"Password",username:"Username",verifyBack:"Back",fillAll:"Please fill in all fields.",code6:"Enter the 6-digit code.",codeSent:"Code resent!",
+    forgot:"Forgot password?",forgotInfo:"Enter your email. We'll send a verification code.",sendCode:"Send Code",resetInfo:"Enter the 6-digit code and your new password.",resetCode:"Verification Code",newPw:"New Password",changePw:"Change Password",resetSent:"Verification code sent.",
+    distLang:"Distribution Languages",distNote1:"Will be posted as-is.",distNoteN:"DeepL will auto-translate and post in {n} languages.",translating:"Translating...",transOk:"Translated! Publishing...",transFail:"Translation failed — posting original.",noApiKey:"DEEPL_API_KEY required for translation. Posting original.",pubMulti:"Published — {n} languages",
+    schedTitle:"Publish Time",schedNow:"🚀 Publish Now",schedDate:"📅 Date & Time",schedDelay:"⏰ After N hours",schedHourUnit:"hours later",schedOk:"Scheduled!",mediaUploading:"📎 Uploading media...",
+    edit:"Edit",editSave:"Save Changes",editMode:"Editing scheduled post",editDone:"Updated!",editOnly:"Only scheduled posts can be edited.",
+    or:"or",gLogin:"Continue with Google",mLogin:"Continue with Microsoft",aLogin:"Continue with Apple"},
+  zh:{tag:"13个平台，一个界面",dash:"仪表盘",comp:"新帖子",hist:"历史",acct:"账户",
+    tot:"总帖子",sch:"已预约",conn:"已连接",mon:"本月",write:"输入内容...",pub:"发布",
+    selp:"选择平台",rec:"最近帖子",noAcc:"无已连接账户。",sync:"同步",out:"退出",
+    login:"登录",signup:"注册",back:"返回登录",pubd:"已发布",fail:"失败",pubing:"发布中...",
+    nop:"暂无帖子。",selAt:"请选择平台。",enterC:"请输入内容。",del:"删除",delConfirm:"删除此帖子？",deleted:"已删除",
+    syncd:"同步完成！",remember:"保持登录",
+    vinfo:"请输入发送到邮箱的6位验证码。",verify:"验证",resend:"重新发送",
+    file:"📎 附加文件（图片/视频）— 点击或拖拽",uploading:"上传中...",
+    email:"邮箱",password:"密码",username:"用户名",verifyBack:"返回",fillAll:"请填写所有项。",code6:"请输入6位验证码。",codeSent:"验证码已重发！",
+    forgot:"忘记密码？",forgotInfo:"请输入注册邮箱，我们将发送验证码。",sendCode:"发送验证码",resetInfo:"请输入6位验证码和新密码。",resetCode:"验证码",newPw:"新密码",changePw:"更改密码",resetSent:"验证码已发送。",
+    distLang:"分发语言",distNote1:"将按原文发布。",distNoteN:"DeepL自动翻译并以{n}种语言分别发布。",translating:"翻译中...",transOk:"翻译完成！发布中...",transFail:"翻译失败 — 使用原文发布。",noApiKey:"需要DEEPL_API_KEY。使用原文发布。",pubMulti:"已发布 — {n}种语言",
+    schedTitle:"发布时间",schedNow:"🚀 立即发布",schedDate:"📅 指定日期时间",schedDelay:"⏰ N小时后",schedHourUnit:"小时后",schedOk:"预约完成！",mediaUploading:"📎 上传媒体中...",
+    edit:"编辑",editSave:"保存修改",editMode:"编辑预约帖子",editDone:"修改完成！",editOnly:"只能编辑预约中的帖子。",
+    or:"或",gLogin:"使用Google继续",mLogin:"使用Microsoft继续",aLogin:"使用Apple继续"},
+  ja:{tag:"13プラットフォーム、ワンダッシュボード",dash:"ダッシュボード",comp:"新規投稿",hist:"履歴",acct:"アカウント",
+    tot:"総投稿",sch:"予約済",conn:"接続済",mon:"今月",write:"内容を入力...",pub:"投稿する",
+    selp:"プラットフォーム選択",rec:"最近の投稿",noAcc:"接続アカウントなし。",sync:"同期",out:"ログアウト",
+    login:"ログイン",signup:"会員登録",back:"ログインに戻る",pubd:"投稿済",fail:"失敗",pubing:"投稿中...",
+    nop:"投稿なし。",selAt:"プラットフォームを選択。",enterC:"内容を入力。",del:"削除",delConfirm:"この投稿を削除しますか？",deleted:"削除済み",
+    syncd:"同期完了！",remember:"ログイン維持",
+    vinfo:"メールに送信された6桁のコードを入力。",verify:"認証",resend:"再送信",
+    file:"📎 ファイル添付（画像/動画）— クリックまたはドラッグ",uploading:"アップロード中...",
+    email:"メール",password:"パスワード",username:"ユーザー名",verifyBack:"戻る",fillAll:"全項目を入力してください。",code6:"6桁のコードを入力。",codeSent:"コード再送完了！",
+    forgot:"パスワードをお忘れですか？",forgotInfo:"登録メールアドレスを入力してください。認証コードを送信します。",sendCode:"コード送信",resetInfo:"6桁の認証コードと新しいパスワードを入力してください。",resetCode:"認証コード",newPw:"新しいパスワード",changePw:"パスワード変更",resetSent:"認証コードを送信しました。",
+    distLang:"配信言語",distNote1:"原文のまま投稿されます。",distNoteN:"DeepLが自動翻訳し{n}言語で投稿します。",translating:"翻訳中...",transOk:"翻訳完了！投稿中...",transFail:"翻訳失敗 — 原文で投稿します。",noApiKey:"DEEPL_API_KEY必要。原文で投稿します。",pubMulti:"投稿完了 — {n}言語",
+    schedTitle:"投稿時間",schedNow:"🚀 今すぐ投稿",schedDate:"📅 日時指定",schedDelay:"⏰ N時間後",schedHourUnit:"時間後",schedOk:"予約完了！",mediaUploading:"📎 メディアアップロード中...",
+    edit:"編集",editSave:"変更を保存",editMode:"予約投稿を編集中",editDone:"更新完了！",editOnly:"予約投稿のみ編集可能です。",
+    or:"または",gLogin:"Googleで続ける",mLogin:"Microsoftで続ける",aLogin:"Appleで続ける"},
+};
+function t(k){return L[lang]?.[k]||L.ko[k]||k}
+
+// ─── Storage (remember me) ──────────────────────────────
+function getStore(){return document.getElementById("rememberMe")?.checked?localStorage:sessionStorage}
+function loadSession(){
+  token=localStorage.getItem("sh_t")||sessionStorage.getItem("sh_t")||"";
+  user=JSON.parse(localStorage.getItem("sh_u")||sessionStorage.getItem("sh_u")||"null");
+  lang=localStorage.getItem("sh_l")||sessionStorage.getItem("sh_l")||"ko";
+}
+function saveSession(remember){
+  const s=remember?localStorage:sessionStorage;
+  s.setItem("sh_t",token);s.setItem("sh_u",JSON.stringify(user));s.setItem("sh_l",lang);
+}
+function clearSession(){
+  ["sh_t","sh_u","sh_l"].forEach(k=>{localStorage.removeItem(k);sessionStorage.removeItem(k)});
+  token="";user=null;
+}
+
+// ─── API ────────────────────────────────────────────────
+async function api(path,opts={}){
+  const h={"Content-Type":"application/json","X-Language":lang};
+  if(token)h["Authorization"]="Bearer "+token;
+  const r=await fetch(API+path,{...opts,headers:{...h,...opts.headers}});
+  const d=await r.json();
+  if(!r.ok)throw new Error(d.error||"Error");
+  return d;
+}
+
+function toast(msg,ok=true){
+  const e=document.getElementById("toast");
+  e.textContent=msg;e.className="toast "+(ok?"tok":"ter")+" show";
+  setTimeout(()=>e.classList.remove("show"),2500);
+}
+
+function showErr(msg){const e=document.getElementById("aerr");e.textContent=msg;setTimeout(()=>e.textContent="",4000)}
+
+// ─── AUTH FORMS ─────────────────────────────────────────
+function buildAuthLang(){
+  document.getElementById("authLang").innerHTML=
+    ["ko","en","zh","ja"].map(l=>
+      `<button class="alb${lang===l?" on":""}" onclick="setAuthLang('${l}')">${{ko:"한국어",en:"English",zh:"中文",ja:"日本語"}[l]}</button>`
+    ).join("");
+}
+
+function setAuthLang(l){
+  lang=l;localStorage.setItem("sh_l",l);
+  buildAuthLang();updAuthTexts();
+}
+
+function updAuthTexts(){
+  document.getElementById("authTag").textContent=t("tag");
+  document.getElementById("odivText").textContent=t("or");
+  // Login
+  document.getElementById("lbEmail").textContent=t("email");
+  document.getElementById("lbPass").textContent=t("password");
+  document.getElementById("lbRemember").textContent=t("remember");
+  document.getElementById("loginBtn").textContent=t("login");
+  document.getElementById("lbToSignup").textContent=t("signup");
+  // Signup
+  document.getElementById("lbSEmail").textContent=t("email");
+  document.getElementById("lbSUser").textContent=t("username");
+  document.getElementById("lbSPass").textContent=t("password");
+  document.getElementById("signupBtn").textContent=t("signup");
+  document.getElementById("lbToLogin").textContent=t("back");
+  // Verify
+  document.getElementById("vinfo").textContent=t("vinfo");
+  document.getElementById("verifyBtn").textContent=t("verify");
+  document.getElementById("lbResend").textContent=t("resend");
+  document.getElementById("lbVerifyBack").textContent=t("verifyBack");
+  // Forgot
+  document.getElementById("lbForgot").textContent=t("forgot");
+  document.getElementById("forgotInfo").textContent=t("forgotInfo");
+  document.getElementById("lbFEmail").textContent=t("email");
+  document.getElementById("forgotBtn").textContent=t("sendCode");
+  document.getElementById("lbForgotBack").textContent=t("back");
+  // Reset
+  document.getElementById("resetInfo").textContent=t("resetInfo");
+  document.getElementById("lbRCode").textContent=t("resetCode");
+  document.getElementById("lbRPass").textContent=t("newPw");
+  document.getElementById("resetBtn").textContent=t("changePw");
+  document.getElementById("lbResetBack").textContent=t("back");
+  // OAuth buttons
+  buildOAuthBtns();
+}
+
+function showForm(f){
+  ["fLogin","fSignup","fVerify","fForgot","fReset"].forEach(id=>{
+    document.getElementById(id).style.display="none";
+  });
+  const map={login:"fLogin",signup:"fSignup",verify:"fVerify",forgot:"fForgot",reset:"fReset"};
+  if(map[f])document.getElementById(map[f]).style.display="";
+  document.getElementById("aerr").textContent="";
+  if(f==="verify")buildCodeInputs();
+  updAuthTexts();
+}
+
+function buildCodeInputs(){
+  const box=document.getElementById("vcodeBox");
+  box.innerHTML=Array(6).fill(0).map((_,i)=>`<input type="text" maxlength="1" id="vc${i}" oninput="vcNext(${i})" onkeydown="vcBack(event,${i})">`).join("");
+  document.getElementById("vinfo").textContent=t("vinfo");
+  setTimeout(()=>document.getElementById("vc0")?.focus(),100);
+}
+function vcNext(i){const v=document.getElementById("vc"+i).value;if(v&&i<5)document.getElementById("vc"+(i+1)).focus()}
+function vcBack(e,i){if(e.key==="Backspace"&&!document.getElementById("vc"+i).value&&i>0)document.getElementById("vc"+(i-1)).focus()}
+function getCode(){return Array(6).fill(0).map((_,i)=>document.getElementById("vc"+i).value).join("")}
+
+// ─── SIGNUP → VERIFY → COMPLETE ─────────────────────────
+async function doSignup(){
+  const email=document.getElementById("sEmail").value;
+  const username=document.getElementById("sUser").value;
+  const password=document.getElementById("sPass").value;
+  if(!email||!username||!password)return showErr(t("fillAll"));
+  const btn=document.getElementById("signupBtn");
+  btn.disabled=true;
+  try{
+    const d=await api("/auth/signup",{method:"POST",body:JSON.stringify({email,password,username,language:lang})});
+    pendingUser=d.pendingUser;
+    showForm("verify");
+  }catch(e){showErr(e.message)}
+  finally{btn.disabled=false}
+}
+
+async function doVerify(){
+  const code=getCode();
+  if(code.length!==6)return showErr(t("code6"));
+  const btn=document.getElementById("verifyBtn");
+  btn.disabled=true;
+  try{
+    const d=await api("/auth/verify",{method:"POST",body:JSON.stringify({...pendingUser,code})});
+    token=d.token;user=d.user;
+    if(user.language)lang=user.language;
+    saveSession(true);
+    enterApp();
+  }catch(e){showErr(e.message)}
+  finally{btn.disabled=false}
+}
+
+async function doResend(){
+  if(!pendingUser)return;
+  try{
+    await api("/auth/resend-code",{method:"POST",body:JSON.stringify({email:pendingUser.email,language:lang})});
+    toast(t("codeSent"));buildCodeInputs();
+  }catch(e){showErr(e.message)}
+}
+
+let resetEmail="";
+async function doForgotSend(){
+  const email=document.getElementById("fgEmail").value.trim();
+  if(!email)return showErr(t("fillAll"));
+  const btn=document.getElementById("forgotBtn");
+  btn.disabled=true;btn.textContent="...";
+  try{
+    const d=await api("/auth/forgot-password",{method:"POST",body:JSON.stringify({email,language:lang})});
+    resetEmail=email;
+    toast(t("resetSent"));
+    showForm("reset");
+    if(d.devCode)document.getElementById("rsCode").value=d.devCode;
+  }catch(e){showErr(e.message)}
+  finally{btn.disabled=false;btn.textContent=t("sendCode")}
+}
+
+async function doResetPw(){
+  const code=document.getElementById("rsCode").value.trim();
+  const newPassword=document.getElementById("rsPass").value;
+  if(!code||!newPassword)return showErr(t("fillAll"));
+  const btn=document.getElementById("resetBtn");
+  btn.disabled=true;btn.textContent="...";
+  try{
+    const d=await api("/auth/reset-password",{method:"POST",body:JSON.stringify({email:resetEmail,code,newPassword})});
+    toast("✅ "+d.message);
+    showForm("login");
+  }catch(e){showErr(e.message)}
+  finally{btn.disabled=false;btn.textContent=t("changePw")}
+}
+
+async function doLogin(){
+  const email=document.getElementById("lEmail").value;
+  const password=document.getElementById("lPass").value;
+  const remember=document.getElementById("rememberMe").checked;
+  try{
+    const d=await api("/auth/login",{method:"POST",body:JSON.stringify({email,password})});
+    token=d.token;user=d.user;
+    if(user.language)lang=user.language;
+    saveSession(remember);
+    enterApp();
+  }catch(e){showErr(e.message)}
+}
+
+async function doLogout(){
+  try{await api("/auth/logout",{method:"POST"})}catch(e){}
+  clearSession();
+  document.getElementById("authScr").style.display="flex";
+  document.getElementById("app").style.display="none";
+}
+
+// ─── ENTER APP ──────────────────────────────────────────
+function enterApp(){
+  document.getElementById("authScr").style.display="none";
+  document.getElementById("app").style.display="flex";
+  buildSide();buildLang();buildPlats();buildLangsGrid();updTexts();
+  nav("dashboard");loadAccounts();
+}
+
+// ─── SIDEBAR & LANG ─────────────────────────────────────
+function buildSide(){
+  const items=[{id:"dashboard",i:"📊",k:"dash"},{id:"accounts",i:"🔗",k:"acct"},{id:"compose",i:"✏️",k:"comp"},{id:"history",i:"📋",k:"hist"}];
+  document.getElementById("snav").innerHTML=items.map(x=>
+    `<div class="sni${curPage===x.id?" on":""}" onclick="nav('${x.id}')"><span class="ico">${x.i}</span><span>${t(x.k)}</span></div>`
+  ).join("");
+}
+function buildLang(){
+  document.getElementById("lbtns").innerHTML=["ko","en","zh","ja"].map(l=>
+    `<button class="lbtn${lang===l?" on":""}" onclick="setLang('${l}')">${l.toUpperCase()}</button>`
+  ).join("");
+}
+function setLang(l){lang=l;saveSession(!!localStorage.getItem("sh_t"));buildSide();buildLang();updTexts();buildPlats();buildLangsGrid();nav(curPage)}
+function updTexts(){
+  document.getElementById("stag").textContent=t("tag");
+  document.getElementById("loutBtn").textContent=t("out");
+  document.getElementById("ctitle").textContent="✏️ "+t("comp");
+  document.getElementById("htitle").textContent="📋 "+t("hist");
+  document.getElementById("atitle").textContent="🔗 "+t("acct");
+  document.getElementById("plab").textContent=t("selp");
+  document.getElementById("llabel").textContent=t("distLang");
+  document.getElementById("rtitle").textContent=t("rec");
+  document.getElementById("slab").textContent=t("sync");
+  document.getElementById("pubBtn").innerHTML="🚀 "+t("pub");
+  document.getElementById("noAcc").textContent=t("noAcc");
+  // schedule
+  document.getElementById("schedLabel").textContent=t("schedTitle");
+  document.getElementById("soptNowL").textContent=t("schedNow");
+  document.getElementById("soptDateL").textContent=t("schedDate");
+  document.getElementById("soptDelayL").textContent=t("schedDelay");
+  document.getElementById("schedDelayUnit").textContent=t("schedHourUnit");
+  updLangNote();
+}
+
+// ─── DISTRIBUTION LANGUAGE GRID ─────────────────────────
+const LANGS=[
+  {id:"ko",label:"🇰🇷 한국어"},{id:"en",label:"🇺🇸 English"},{id:"zh",label:"🇨🇳 中文"},{id:"ja",label:"🇯🇵 日本語"},
+  {id:"es",label:"🇪🇸 Español"},{id:"fr",label:"🇫🇷 Français"},{id:"de",label:"🇩🇪 Deutsch"},{id:"pt",label:"🇧🇷 Português"},
+  {id:"ru",label:"🇷🇺 Русский"},{id:"ar",label:"🇸🇦 العربية"},{id:"hi",label:"🇮🇳 हिन्दी"},{id:"th",label:"🇹🇭 ไทย"},
+  {id:"vi",label:"🇻🇳 Tiếng Việt"},{id:"id",label:"🇮🇩 Bahasa"},{id:"tr",label:"🇹🇷 Türkçe"},{id:"it",label:"🇮🇹 Italiano"},
+  {id:"nl",label:"🇳🇱 Nederlands"},{id:"pl",label:"🇵🇱 Polski"},{id:"sv",label:"🇸🇪 Svenska"},{id:"uk",label:"🇺🇦 Українська"},
+];
+
+function buildLangsGrid(){
+  document.getElementById("lgrid").innerHTML=LANGS.map(l=>
+    `<button class="pc${selLangs.includes(l.id)?" on":""}" onclick="togLang('${l.id}')">${l.label}</button>`
+  ).join("");
+  updLangNote();
+}
+function togLang(id){
+  if(selLangs.includes(id)){
+    if(selLangs.length<=1)return; // 최소 1개 유지
+    selLangs=selLangs.filter(x=>x!==id);
+  }else{
+    selLangs.push(id);
+  }
+  buildLangsGrid();
+}
+function updLangNote(){
+  const el=document.getElementById("lnote");
+  if(selLangs.length<=1) el.textContent=t("distNote1");
+  else el.textContent=t("distNoteN").replace("{n}",selLangs.length);
+}
+
+// ─── NAVIGATE ───────────────────────────────────────────
+function nav(p){
+  curPage=p;
+  document.querySelectorAll(".pg").forEach(e=>e.classList.remove("on"));
+  const map={dashboard:"pDash",compose:"pComp",history:"pHist",accounts:"pAcct"};
+  document.getElementById(map[p]).classList.add("on");
+  buildSide();
+  if(p==="dashboard")loadDash();
+  if(p==="history")loadHist();
+  if(p==="accounts")renderAccts();
+}
+
+// ─── DASHBOARD ──────────────────────────────────────────
+async function loadDash(){
+  try{
+    const d=await api("/posts?limit=5");
+    const tot=d.total||0;
+    document.getElementById("stGrid").innerHTML=[
+      [t("tot"),tot],[t("sch"),0],[t("conn"),accounts.length+"/13"],[t("mon"),tot]
+    ].map(([l,v])=>`<div class="stc"><div class="stc-l">${l}</div><div class="stc-v">${v}</div></div>`).join("");
+    renderPosts(d.posts||[],"rPosts");
+  }catch(e){
+    document.getElementById("stGrid").innerHTML="";
+    document.getElementById("rPosts").innerHTML=`<p class="empty">${t("nop")}</p>`;
+  }
+}
+
+// ─── HISTORY ────────────────────────────────────────────
+async function loadHist(){
+  try{const d=await api("/posts?limit=50");renderPosts(d.posts||[],"hList")}
+  catch(e){document.getElementById("hList").innerHTML=`<p class="empty">${t("nop")}</p>`}
+}
+
+function renderPosts(posts,tid){
+  const el=document.getElementById(tid);
+  const isHist=tid==="hList";
+  if(!posts.length){el.innerHTML=`<p class="empty">${t("nop")}</p>`;return}
+  el.innerHTML=posts.map(p=>{
+    const pls=(typeof p.platforms==="string"?JSON.parse(p.platforms):p.platforms)||[];
+    const st=p.status||"published";
+    const sc=st==="published"?"sp":st==="scheduled"?"ss":"sf";
+    const sn=st==="published"?t("pubd"):st==="scheduled"?t("sch"):t("fail");
+    const dt=new Date(p.created_at).toLocaleDateString();
+    const schedAt=p.scheduled_at?`<span class="hd" style="color:var(--ac)">📅 ${new Date(p.scheduled_at).toLocaleString()}</span>`:"";
+    const del=isHist?`<button class="hdel" onclick="delPost(${p.id})" title="${t("del")}">🗑</button>`:"";
+    const edit=(isHist&&st==="scheduled")?`<button class="hedit" onclick="editPost(${p.id})" title="${t("edit")}">✏️</button>`:"";
+    return`<div class="hi" id="post_${p.id}"><div class="hc"><div class="htx">${escH(p.content)}</div><div class="hpl">${pls.map(pid=>{const pl=PL.find(x=>x.id===pid);return`<span class="hpt">${pl?.i||""} ${pl?.n||pid}</span>`}).join("")}</div></div><div class="hm"><span class="hs ${sc}">${sn}</span>${schedAt}<span class="hd">${dt}</span>${edit}${del}</div></div>`;
+  }).join("");
+}
+function escH(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
+
+async function delPost(id){
+  if(!confirm(t("delConfirm")))return;
+  try{
+    await api("/posts/"+id,{method:"DELETE"});
+    const el=document.getElementById("post_"+id);
+    if(el){el.style.opacity="0";el.style.transition="all .3s";setTimeout(()=>el.remove(),300)}
+    toast("✅ "+t("deleted"));
+  }catch(e){toast("❌ "+e.message,false)}
+}
+
+async function editPost(id){
+  try{
+    const d=await api("/posts/"+id);
+    const p=d.post;
+    if(!p)return toast("❌ Not found",false);
+
+    const pls=(typeof p.platforms==="string"?JSON.parse(p.platforms):p.platforms)||[];
+    const spec=(typeof p.platform_specific==="string"?JSON.parse(p.platform_specific):p.platform_specific)||{};
+    const media=(typeof p.media_urls==="string"?JSON.parse(p.media_urls):p.media_urls)||[];
+    const platId=pls[0];
+    if(!platId)return;
+
+    // 편집 모드 설정
+    editingPostId=id;
+
+    // 플랫폼 및 데이터 세팅 (pickPlat 호출하면 데이터가 리셋되므로 직접 설정)
+    selPlat=platId;
+    curPlatData={_files:{}};
+
+    // 텍스트 필드 채우기
+    const pf=PF[platId];
+    if(pf){
+      const mainKey=pf.fields.find(f=>["text","caption","description"].includes(f.k)&&f.type==="textarea")?.k;
+      if(mainKey)curPlatData[mainKey]=p.content||"";
+      const platSpec=spec[platId]||{};
+      if(platSpec.title)curPlatData.title=platSpec.title;
+      if(platSpec.firstComment)curPlatData.firstComment=platSpec.firstComment;
+      if(platSpec.tags)curPlatData.tags=Array.isArray(platSpec.tags)?platSpec.tags.join(", "):platSpec.tags;
+      if(platSpec.subreddit)curPlatData.subreddit=platSpec.subreddit;
+      if(platSpec.link)curPlatData.link=platSpec.link;
+    }
+
+    // 미디어 복원
+    if(media.length>0){
+      const fileKey=pf?.fields.find(f=>f.type==="file")?.k||"media";
+      curPlatData._files[fileKey]=[];
+      media.forEach(m=>{
+        const item=typeof m==="string"?{url:m,type:"image"}:m;
+        curPlatData._files[fileKey].push(item);
+      });
+    }
+
+    // 화면 이동
+    nav("compose");
+    buildPlats();
+    showEditor();
+
+    // 예약 시간 복원
+    if(p.scheduled_at){
+      const dateRadio=document.querySelector('input[name="schedMode"][value="date"]');
+      if(dateRadio){dateRadio.checked=true;toggleSched()}
+      const dt=new Date(p.scheduled_at);
+      const local=new Date(dt.getTime()-dt.getTimezoneOffset()*60000).toISOString().slice(0,16);
+      document.getElementById("schedDateTime").value=local;
+    }
+
+    // 편집 모드 표시
+    document.getElementById("pubBtn").innerHTML="✏️ "+t("editSave");
+    toast("✏️ "+t("editMode"));
+  }catch(e){toast("❌ "+e.message,false)}
+}
+
+// ─── ACCOUNTS ───────────────────────────────────────────
+async function loadAccounts(){
+  try{const d=await api("/social/accounts");accounts=(d.accounts||[]).filter(a=>a.is_active);buildPlats()}
+  catch(e){accounts=[]}
+}
+async function doSync(){
+  try{const d=await api("/social/sync",{method:"POST"});accounts=(d.accounts||[]).filter(a=>a.is_active);toast(t("syncd")+" ("+d.synced+")");buildPlats();renderAccts()}
+  catch(e){toast(e.message,false)}
+}
+function renderAccts(){
+  const g=document.getElementById("agrid"),m=document.getElementById("noAcc");
+  if(!accounts.length){g.innerHTML="";m.style.display="";return}
+  m.style.display="none";
+  g.innerHTML=accounts.map(a=>{const p=PL.find(x=>x.id===a.platform);return`<div class="ac"><div class="bar" style="background:${p?.c||"var(--ac)"}"></div><div class="aico">${p?.i||"📱"}</div><div class="anm">${p?.n||a.platform}</div><div class="aus">${a.platform_username||""}</div><div class="ast">● Connected</div></div>`}).join("");
+}
+
+// ─── PLATFORM FIELDS DEFINITION ─────────────────────────
+const PF={
+  youtube:{fields:[
+    {k:"video",type:"file",accept:"video/*",req:true},
+    {k:"thumbnail",type:"file",accept:"image/*"},
+    {k:"title",type:"input",max:100,req:true},
+    {k:"description",type:"textarea",max:5000},
+    {k:"tags",type:"input",hint:true},
+    {k:"firstComment",type:"textarea",max:500}
+  ]},
+  instagram:{fields:[
+    {k:"media",type:"file",accept:"image/*,video/*",multi:true,req:true},
+    {k:"caption",type:"textarea",max:2200},
+    {k:"firstComment",type:"textarea",max:300}
+  ]},
+  tiktok:{fields:[
+    {k:"video",type:"file",accept:"video/*",req:true},
+    {k:"caption",type:"textarea",max:2200}
+  ]},
+  pinterest:{fields:[
+    {k:"image",type:"file",accept:"image/*",req:true},
+    {k:"title",type:"input",max:100,req:true},
+    {k:"description",type:"textarea",max:500},
+    {k:"link",type:"input"}
+  ]},
+  snapchat:{fields:[
+    {k:"media",type:"file",accept:"image/*,video/*",req:true},
+    {k:"caption",type:"textarea",max:250}
+  ]},
+  twitter:{fields:[
+    {k:"text",type:"textarea",max:280,req:true},
+    {k:"media",type:"file",accept:"image/*,video/*",multi:true}
+  ]},
+  threads:{fields:[
+    {k:"text",type:"textarea",max:500,req:true},
+    {k:"media",type:"file",accept:"image/*,video/*",multi:true}
+  ]},
+  bluesky:{fields:[
+    {k:"text",type:"textarea",max:300,req:true},
+    {k:"media",type:"file",accept:"image/*",multi:true}
+  ]},
+  facebook:{fields:[
+    {k:"text",type:"textarea",max:63206,req:true},
+    {k:"media",type:"file",accept:"image/*,video/*",multi:true},
+    {k:"link",type:"input"}
+  ]},
+  linkedin:{fields:[
+    {k:"text",type:"textarea",max:3000,req:true},
+    {k:"media",type:"file",accept:"image/*,video/*",multi:true}
+  ]},
+  reddit:{fields:[
+    {k:"subreddit",type:"input",req:true},
+    {k:"title",type:"input",max:300,req:true},
+    {k:"text",type:"textarea",max:40000},
+    {k:"media",type:"file",accept:"image/*,video/*",multi:true}
+  ]},
+  telegram:{fields:[
+    {k:"text",type:"textarea",max:4096,req:true},
+    {k:"media",type:"file",accept:"image/*,video/*",multi:true}
+  ]},
+  googlebusiness:{fields:[
+    {k:"text",type:"textarea",max:1500,req:true},
+    {k:"media",type:"file",accept:"image/*",multi:true}
+  ]}
+};
+
+const FL={
+  ko:{title:"제목",description:"설명",text:"본문",caption:"캡션",video:"영상 파일",media:"사진/영상",
+    image:"이미지",thumbnail:"썸네일 이미지",tags:"태그",firstComment:"첫 번째 댓글",link:"링크 URL",
+    subreddit:"서브레딧 (r/)",reqMark:"필수",tagsHint:"쉼표로 구분 (예: 여행, 일상, vlog)",
+    selPlat:"⬆️ 플랫폼을 선택하세요",clickUpload:"클릭하여 업로드",uploaded:"개 업로드됨",
+    mediaT:"미디어",textT:"텍스트",bothT:"복합"},
+  en:{title:"Title",description:"Description",text:"Text",caption:"Caption",video:"Video file",
+    media:"Photo/Video",image:"Image",thumbnail:"Thumbnail image",tags:"Tags",firstComment:"First comment",
+    link:"Link URL",subreddit:"Subreddit (r/)",reqMark:"required",tagsHint:"Comma separated (e.g. travel, daily, vlog)",
+    selPlat:"⬆️ Select a platform above",clickUpload:"Click to upload",uploaded:"uploaded",
+    mediaT:"Media",textT:"Text",bothT:"Mixed"},
+  zh:{title:"标题",description:"描述",text:"正文",caption:"说明文字",video:"视频文件",
+    media:"照片/视频",image:"图片",thumbnail:"缩略图",tags:"标签",firstComment:"第一条评论",
+    link:"链接URL",subreddit:"子版块 (r/)",reqMark:"必填",tagsHint:"逗号分隔",
+    selPlat:"⬆️ 请在上方选择平台",clickUpload:"点击上传",uploaded:"已上传",
+    mediaT:"媒体",textT:"文本",bothT:"混合"},
+  ja:{title:"タイトル",description:"説明",text:"本文",caption:"キャプション",video:"動画ファイル",
+    media:"写真/動画",image:"画像",thumbnail:"サムネイル画像",tags:"タグ",firstComment:"最初のコメント",
+    link:"リンクURL",subreddit:"サブレディット (r/)",reqMark:"必須",tagsHint:"カンマ区切り",
+    selPlat:"⬆️ プラットフォームを選択",clickUpload:"クリックでアップロード",uploaded:"アップロード済み",
+    mediaT:"メディア",textT:"テキスト",bothT:"複合"},
+};
+function fl(k){return FL[lang]?.[k]||FL.ko[k]||k}
+function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;")}
+
+// ─── PLATFORM GRID (single select) ─────────────────────
+function buildPlats(){
+  const ci=accounts.map(a=>a.platform);
+  const typeTag={media:"mediaT",text:"textT",both:"bothT"};
+  document.getElementById("pgrid").innerHTML=PL.map(p=>{
+    const con=ci.includes(p.id),sel=selPlat===p.id;
+    const tag=`<span class="ptype-tag ${p.type}">${fl(typeTag[p.type])}</span>`;
+    return`<button class="pc${sel?" on":""}${con?"":" dis"}" onclick="${con?`pickPlat('${p.id}')`:""}">${p.i} ${p.n} ${tag}</button>`;
+  }).join("");
+  showEditor();
+}
+
+function pickPlat(id){
+  if(selPlat===id){selPlat="";curPlatData={_files:{}}}
+  else{
+    // 기존 데이터 저장 후 전환
+    saveFields();
+    selPlat=id;
+    curPlatData={_files:{}};
+  }
+  buildPlats();
+}
+
+// ─── EDITOR ─────────────────────────────────────────────
+function showEditor(){
+  const nosel=document.getElementById("noSelMsg");
+  const fields=document.getElementById("platFields");
+  const secLang=document.getElementById("secLang");
+  const secPub=document.getElementById("secPub");
+
+  if(!selPlat){
+    nosel.style.display="";nosel.textContent=fl("selPlat");
+    fields.innerHTML="";
+    secLang.style.display="none";secPub.style.display="none";
+    document.getElementById("secSched").style.display="none";
+    return;
+  }
+  nosel.style.display="none";
+  secLang.style.display="";secPub.style.display="";
+  document.getElementById("secSched").style.display="";
+
+  const p=PL.find(x=>x.id===selPlat);
+  const typeColors={media:"rgba(240,90,90,.12);color:#f06a6a",text:"rgba(45,212,160,.12);color:var(--ok)",both:"rgba(124,106,239,.12);color:var(--ac2)"};
+  const typeTag={media:"mediaT",text:"textT",both:"bothT"};
+
+  let h=`<div class="plat-header">
+    <span class="ph-ico">${p.i}</span>
+    <span class="ph-name">${p.n}</span>
+    <span class="ph-type" style="background:${typeColors[p.type]}">${fl(typeTag[p.type])}</span>
+  </div>`;
+
+  const pf=PF[selPlat];
+  if(!pf){fields.innerHTML=h;return}
+  const d=curPlatData;
+
+  pf.fields.forEach(f=>{
+    const lab=fl(f.k);
+    const rq=f.req?` <span class="req">*${fl("reqMark")}</span>`:"";
+
+    if(f.type==="input"){
+      h+=`<div class="pf"><div class="pf-label">${lab}${rq}</div>
+        <input class="pf-input" id="pf_${f.k}" value="${esc(d[f.k])}" maxlength="${f.max||500}" placeholder="${lab}">
+        ${f.hint?`<div class="pf-hint">${fl("tagsHint")}</div>`:""}</div>`;
+    }else if(f.type==="textarea"){
+      const v=d[f.k]||"",mx=f.max||5000;
+      h+=`<div class="pf"><div class="pf-label">${lab}${rq}</div>
+        <textarea class="pf-ta" id="pf_${f.k}" maxlength="${mx}" placeholder="${lab}" oninput="updFC('${f.k}',${mx})">${esc(v)}</textarea>
+        <div class="pf-cc" id="pf_cc_${f.k}">${v.length} / ${mx}</div></div>`;
+    }else if(f.type==="file"){
+      const files=d._files[f.k]||[];
+      const has=files.length>0;
+      h+=`<div class="pf"><div class="pf-label">${lab}${rq}</div>
+        <input type="file" id="pf_fi_${f.k}" ${f.accept?`accept="${f.accept}"`:""} ${f.multi?"multiple":""} style="display:none" onchange="upFile('${f.k}',this.files)">
+        <div class="pf-fz${has?" has":""}" onclick="document.getElementById('pf_fi_${f.k}').click()">
+          ${has?`✅ ${files.length} ${fl("uploaded")}`:`📎 ${fl("clickUpload")} — ${lab}`}
+        </div>
+        <div class="pf-prev" id="pf_fp_${f.k}">
+          ${files.map((file,i)=>{
+            const tag=file.type==="video"?`<video src="${file.url}" muted></video>`:`<img src="${file.url}">`;
+            return`<div class="pf-prev-item">${tag}<button class="fx" onclick="rmFile('${f.k}',${i})">×</button></div>`;
+          }).join("")}
+        </div></div>`;
+    }
+  });
+
+  fields.innerHTML=h;
+}
+
+function updFC(k,mx){
+  const el=document.getElementById(`pf_${k}`);
+  const cc=document.getElementById(`pf_cc_${k}`);
+  if(el&&cc){cc.textContent=`${el.value.length} / ${mx}`;cc.className=el.value.length>mx?"pf-cc over":"pf-cc"}
+}
+
+function saveFields(){
+  if(!selPlat||!PF[selPlat])return;
+  PF[selPlat].fields.forEach(f=>{
+    if(f.type==="file")return;
+    const el=document.getElementById(`pf_${f.k}`);
+    if(el)curPlatData[f.k]=el.value;
+  });
+}
+
+// ─── FILE UPLOAD ────────────────────────────────────────
+async function upFile(k,files){
+  if(!token||!files.length)return;
+  const fd=new FormData();
+  for(const f of files)fd.append("files",f);
+  try{
+    const r=await fetch(API+"/upload",{method:"POST",headers:{"Authorization":"Bearer "+token},body:fd});
+    const d=await r.json();if(!r.ok)throw new Error(d.error);
+    if(!curPlatData._files[k])curPlatData._files[k]=[];
+    curPlatData._files[k].push(...d.files);
+    saveFields();showEditor();
+  }catch(e){toast(e.message,false)}
+}
+function rmFile(k,i){curPlatData._files[k].splice(i,1);saveFields();showEditor()}
+
+// ─── SCHEDULE ──────────────────────────────────────────
+function toggleSched(){
+  const mode=document.querySelector('input[name="schedMode"]:checked').value;
+  document.querySelectorAll(".sopt").forEach(el=>el.classList.remove("on"));
+  document.querySelector(`input[name="schedMode"][value="${mode}"]`).closest(".sopt").classList.add("on");
+  document.getElementById("schedDateWrap").style.display=mode==="date"?"block":"none";
+  document.getElementById("schedDelayWrap").style.display=mode==="delay"?"flex":"none";
+
+  // 날짜 기본값: 현재 시간 + 1시간
+  if(mode==="date"&&!document.getElementById("schedDateTime").value){
+    const d=new Date(Date.now()+3600000);
+    document.getElementById("schedDateTime").value=d.toISOString().slice(0,16);
+  }
+  // 버튼 텍스트 변경
+  const btn=document.getElementById("pubBtn");
+  btn.innerHTML=mode==="now"?"🚀 "+t("pub"):"📅 "+t("pub");
+}
+
+function getScheduledFor(){
+  const mode=document.querySelector('input[name="schedMode"]:checked').value;
+  if(mode==="date"){
+    const v=document.getElementById("schedDateTime").value;
+    return v?new Date(v).toISOString():null;
+  }else if(mode==="delay"){
+    const h=parseInt(document.getElementById("schedDelayH").value)||1;
+    return new Date(Date.now()+h*3600000).toISOString();
+  }
+  return null; // now
+}
+
+// ─── PUBLISH ────────────────────────────────────────────
+async function doPublish(){
+  if(!selPlat)return toast(t("selAt"),false);
+  saveFields();
+
+  const pf=PF[selPlat];
+  const p=PL.find(x=>x.id===selPlat);
+  const d=curPlatData;
+
+  // 필수 필드 검증
+  for(const f of pf.fields){
+    if(!f.req)continue;
+    if(f.type==="file"){
+      if(!d._files?.[f.k]?.length)return toast(`${fl(f.k)} — ${fl("reqMark")}`,false);
+    }else{
+      if(!d[f.k]?.trim())return toast(`${fl(f.k)} — ${fl("reqMark")}`,false);
+    }
+  }
+
+  // 메인 텍스트, 미디어, 플랫폼 고유 데이터 추출
+  const mainKey=pf.fields.find(f=>["text","caption","description"].includes(f.k)&&f.type==="textarea")?.k;
+  const content=d[mainKey]||d.title||"";
+
+  const allFiles=[];
+  Object.values(d._files||{}).forEach(arr=>allFiles.push(...arr));
+  const mediaItems=allFiles.length?allFiles.map(f=>({type:f.type,url:f.url})):undefined;
+
+  const spec={};
+  if(d.title)spec.title=d.title;
+  if(d.firstComment)spec.firstComment=d.firstComment;
+  if(d.tags)spec.tags=d.tags.split(",").map(s=>s.trim()).filter(Boolean);
+  if(d.subreddit)spec.subreddit=d.subreddit;
+  if(d.link)spec.link=d.link;
+
+  const btn=document.getElementById("pubBtn");
+  const status=document.getElementById("transStatus");
+  btn.disabled=true;
+
+  const scheduledFor=getScheduledFor();
+  const isScheduled=!!scheduledFor;
+
+  async function postOne(c){
+    const body={content:c,platforms:[selPlat],platformSpecific:{[selPlat]:spec}};
+    if(mediaItems)body.mediaItems=mediaItems;
+    if(scheduledFor)body.scheduledFor=scheduledFor;
+    console.log("📤 Post request:", JSON.stringify(body));
+    const url=editingPostId?"/posts/"+editingPostId:"/posts";
+    const method=editingPostId?"PUT":"POST";
+    const res=await api(url,{method,body:JSON.stringify(body)});
+    console.log("📥 Post response:", JSON.stringify(res));
+    return res;
+  }
+
+  try{
+    const pubLabel=editingPostId?t("editDone"):isScheduled?t("schedOk"):t("pubd");
+    if(selLangs.length<=1){
+      btn.innerHTML=`<span class="spinner"></span> ${mediaItems?t("mediaUploading"):t("pubing")}`;
+      await postOne(content);
+      toast("✅ "+pubLabel);
+    }else{
+      // 다국어 번역 → 언어별 게시
+      btn.innerHTML=`<span class="spinner"></span> ${t("translating")}`;
+      status.style.display="block";status.innerHTML="";
+
+      const fromLang=selLangs[0];
+      const toLangs=selLangs.filter(l=>l!==fromLang);
+      const contentMap={[fromLang]:content};
+
+      if(toLangs.length>0){
+        try{
+          const tr=await api("/ai/translate",{method:"POST",body:JSON.stringify({content,fromLang,toLangs})});
+          Object.assign(contentMap,tr.translations||{});
+          status.innerHTML=`<span style="color:var(--ok)">✅ ${t("transOk")}</span>`;
+        }catch(e){
+          status.innerHTML=`<span style="color:var(--warn)">⚠️ ${e.message.includes("DEEPL_API_KEY")?t("noApiKey"):t("transFail")}</span>`;
+          toLangs.forEach(l=>{contentMap[l]=content});
+        }
+      }
+
+      btn.innerHTML=`<span class="spinner"></span> ${mediaItems?t("mediaUploading"):t("pubing")}`;
+      let ok=0;
+      const langN={};LANGS.forEach(l=>{langN[l.id]=l.label.split(" ")[0]});
+      for(const [tl,tc] of Object.entries(contentMap)){
+        try{
+          await postOne(tc);ok++;
+          status.innerHTML+=`<div style="margin-top:4px">${langN[tl]||tl} ✅</div>`;
+        }catch(e){
+          status.innerHTML+=`<div style="margin-top:4px;color:var(--err)">${langN[tl]||tl} ❌ ${e.message}</div>`;
+        }
+      }
+      if(ok>0)toast("✅ "+(isScheduled?t("schedOk"):t("pubMulti").replace("{n}",ok)));
+      else toast("❌ "+t("fail"),false);
+    }
+
+    // 초기화
+    editingPostId=null;
+    selPlat="";curPlatData={_files:{}};
+    buildPlats();
+    // 예약 모드 리셋
+    const nowRadio=document.querySelector('input[name="schedMode"][value="now"]');
+    if(nowRadio){nowRadio.checked=true;toggleSched()}
+    setTimeout(()=>{status.style.display="none"},5000);
+  }catch(e){console.error("❌ Publish error:",e);toast("❌ "+e.message,false)}
+  finally{btn.disabled=false;btn.innerHTML="🚀 "+t("pub")}
+}
+
+// ─── OAUTH ──────────────────────────────────────────────
+const OAUTH_ICONS={
+  google:`<svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>`,
+  microsoft:`<svg viewBox="0 0 21 21" width="18" height="18"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>`,
+  apple:`<svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>`,
+};
+
+let oauthProviders=[];
+
+async function loadOAuthProviders(){
+  try{
+    const d=await fetch(API+"/auth/providers").then(r=>r.json());
+    oauthProviders=d.providers||[];
+  }catch(e){oauthProviders=[]}
+  buildOAuthBtns();
+}
+
+function buildOAuthBtns(){
+  const box=document.getElementById("oauthBtns");
+  const div=document.getElementById("odiv");
+  if(!oauthProviders.length){box.innerHTML="";div.style.display="none";return}
+  div.style.display="flex";
+  const labels={google:t("gLogin"),microsoft:t("mLogin"),apple:t("aLogin")};
+  const cls={google:"g",microsoft:"m",apple:"a"};
+  box.innerHTML=oauthProviders.map(p=>
+    `<button class="obtn ${cls[p.id]||""}" onclick="location.href='${API}/auth/${p.id}'">${OAUTH_ICONS[p.id]||""} ${labels[p.id]||p.name}</button>`
+  ).join("");
+}
+
+// ─── OAuth 콜백 처리 (URL에서 token 추출) ───────────────
+function handleOAuthCallback(){
+  const params=new URLSearchParams(window.location.search);
+  const t=params.get("token");
+  const u=params.get("user");
+  const err=params.get("error");
+
+  if(err){
+    showErr(err.replace(/_/g," "));
+    window.history.replaceState({},"","/");
+    return false;
+  }
+  if(t&&u){
+    try{
+      token=t;user=JSON.parse(decodeURIComponent(u));
+      if(user.language)lang=user.language;
+      localStorage.setItem("sh_t",token);
+      localStorage.setItem("sh_u",JSON.stringify(user));
+      localStorage.setItem("sh_l",lang);
+      window.history.replaceState({},"","/");
+      return true;
+    }catch(e){}
+  }
+  return false;
+}
+
+// ─── INIT ───────────────────────────────────────────────
+const oauthLogin=handleOAuthCallback();
+loadSession();
+if(oauthLogin){token=localStorage.getItem("sh_t");user=JSON.parse(localStorage.getItem("sh_u"));}
+buildAuthLang();
+updAuthTexts();
+updTexts();
+loadOAuthProviders();
+if(token&&user)enterApp();
+</script>
+</body>
+</html>
