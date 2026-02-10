@@ -3,6 +3,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { LangProvider } from "./context/LangContext";
 import { ToastProvider } from "./context/ToastContext";
 import { AccountsProvider } from "./context/AccountsContext";
+import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
 import Login from "./pages/Login";
@@ -15,6 +16,7 @@ import Accounts from "./pages/Accounts";
 
 export default function App() {
   return (
+    <ErrorBoundary>
     <BrowserRouter>
       <LangProvider>
         <AuthProvider>
@@ -39,5 +41,6 @@ export default function App() {
         </AuthProvider>
       </LangProvider>
     </BrowserRouter>
+    </ErrorBoundary>
   );
 }

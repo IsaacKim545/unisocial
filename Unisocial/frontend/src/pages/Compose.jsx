@@ -299,7 +299,7 @@ export default function Compose() {
               onRemoveFile={(idx) => removeFile(f.k, idx)}
               onPreview={(file) => setLightbox(file)}
               uploading={uploading}
-              fl={fl} t={t} />
+              lang={lang} fl={fl} t={t} />
           ))}
         </div>
       )}
@@ -485,7 +485,7 @@ function Lightbox({ file, onClose }) {
 }
 
 // ── 필드 렌더러 (드래그앤드롭 + 프로그레스바 + 미리보기) ──
-function FieldRenderer({ field: f, value, files, onChange, onUpload, onRemoveFile, onPreview, uploading, fl, t }) {
+function FieldRenderer({ field: f, value, files, onChange, onUpload, onRemoveFile, onPreview, uploading, lang, fl, t }) {
   const fileRef = useRef(null);
   const [dragOver, setDragOver] = useState(false);
 
