@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"C:/Users/kys72/OneDrive/Desktop/개발/웹앱/통합 소셜미디어/Unisocial/backend-firebase/functions/config\")",
+      "Bash(mkdir -p \"C:/Users/kys72/OneDrive/Desktop/개발/웹앱/통합 소셜미디어/Unisocial/backend-firebase/functions/middleware\")",
+      "Bash(mkdir -p \"C:/Users/kys72/OneDrive/Desktop/개발/웹앱/통합 소셜미디어/Unisocial/backend-firebase/functions/routes\")",
+      "Bash(mkdir -p \"C:/Users/kys72/OneDrive/Desktop/개발/웹앱/통합 소셜미디어/Unisocial/backend-firebase/functions/services\")",
+      "Bash(rm:*)",
+      "Bash(rm -rf README.md \"Unisocial/README.md\")",
+      "Bash(rm -rf frontend)"
+    ]
+  }
+}
