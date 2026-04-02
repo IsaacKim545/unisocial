@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import Compose from "./pages/Compose";
 import History from "./pages/History";
 import Accounts from "./pages/Accounts";
+import InstallPrompt from "./components/InstallPrompt";
 
 export default function App() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
               </Route>
             </Routes>
             </AccountsProvider>
+            <InstallPrompt />
           </ToastProvider>
         </AuthProvider>
       </LangProvider>
